@@ -1,0 +1,251 @@
+#include<iostream>
+using namespace std;
+
+
+class Vector {
+
+public:
+	
+	Vector(const Vector & obj);
+	Vector(int cap=10);
+	~Vector();
+	void addElement(int);
+	void addElement(int,int);
+	void remove();
+	void remove(int);
+	void sortAsc();
+	void sortDesc();
+	int search(int);
+	int numberElement();
+	int empty();
+	int get(int);
+	 Vector&  operator=(const Vector & obj);
+	 int  operator[](const int  i);
+	 Vector  operator+(const int number);
+	 Vector  operator-(const int number);
+	  
+	
+	friend ostream & operator<<( ostream & out , const Vector & v);
+	friend istream & operator>>( istream & out ,  Vector & v);
+ 
+private:
+
+int*numbers;
+int capicity;
+int num_element;
+void resize(int);
+void copyArrays(int[],int[],int);
+void addArrays(int *,int*,int*);
+
+
+};
+
+
+Vector :: Vector(const Vector & obj){
+
+	this->num_element=obj.num_element;
+	this->capicity=obj.capicity;
+	numbers=new int [capicity];
+	copyArrays(numbers,obj.numbers,obj.num_element);
+
+}
+Vector:: Vector(int cap)
+	{
+		capicity=cap;
+		numbers=new int[capicity];
+		num_element=0;
+	}
+Vector::~Vector(){
+delete []numbers;
+numbers=NULL;
+capicity=num_element=0;
+
+}
+void Vector::addElement(int element){
+
+		if(num_element<capicity){numbers[num_element++]=element;}
+		else{ resize(1);
+		addElement(element);}
+	}
+/*void Vector::addElement(int element,int location){
+	
+	
+	if(location>capicity){
+
+		resize(location-capicity);
+		addElement(element,location);
+			
+	}
+		
+ 
+			
+			
+	numbers[location-1]=element;num_element++;
+
+ 
+
+
+}*/
+	
+void Vector::remove(){
+	
+int *temp=new int[capicity-1];
+copyArrays(temp,numbers,--capicity);
+delete []numbers;
+numbers=temp;
+	num_element--;
+	}
+void Vector::remove(int location){
+	
+	if(location>capicity||location>num_element)cout<<"ERROR : The location does not exist or the location did not reserve \n";
+	
+	else{
+	
+	 int *temp=new int[capicity-1];
+	 for(int i=0,t=0;i<capicity;i++)
+	 if(i!=location-1)
+	 temp[t++]=numbers[i];
+	 delete [] numbers;
+	 numbers=temp;
+	 num_element--;
+	 capicity--;
+
+	 
+	
+	
+	   }
+	
+	}
+void Vector::sortAsc(){
+	
+	for(int i=0;i<num_element;i++){
+	for(int t=i+1;t<num_element;t++)
+		if(numbers[t]>numbers[i]){
+		int temp=numbers[i];
+		numbers[i]=numbers[t];
+		numbers[t]=temp;}}}
+void Vector::sortDesc(){
+	
+	for(int i=0;i<num_element;i++){
+	for(int t=i+1;t<num_element;t++)
+		if(numbers[t]<numbers[i]){
+		int temp=numbers[i];
+		numbers[i]=numbers[t];
+		numbers[t]=temp;}}}
+int Vector::search(int element){
+	
+	for(int i=0;i<num_element;i++)if(numbers[i]==element)return 1;
+	return 0;
+	
+	
+	}
+int Vector::numberElement(){
+		return num_element;}	
+int Vector::empty(){
+		return (num_element<=0);}
+int Vector::get(int location){
+	
+	if(location>capicity||location>num_element){cout<<"ERROR:  The location does not exist or the location did not reserve :  ";return 0;}
+	
+	else
+	return numbers[location-1];
+	
+	
+	}
+void Vector::copyArrays(int copiedArray[],int copyingArray[],int size_copyingArray){
+
+	for(int i=0;i<size_copyingArray;i++)
+		copiedArray[i]=copyingArray[i];
+	
+	}
+void Vector::addArrays(int *arr1,int*arr2,int * res){
+	
+
+		for(int i=0;i<num_element;i++){
+	
+	res[i]=arr1[i]+arr2[i];
+	}
+		
+}
+void Vector::resize(int num_loc){
+	int * temp=new int[capicity+num_loc];
+	copyArrays(temp,numbers,capicity++);
+	delete []numbers;
+	numbers=temp;
+	
+	}
+  Vector & Vector :: operator=(const Vector & obj){
+	if(this!=&obj){
+		if(numbers!=NULL){
+			delete [] numbers;}
+
+	num_element=obj.num_element;
+	capicity=obj.capicity;
+	
+	numbers=new int[capicity];
+	copyArrays(numbers,obj.numbers,capicity);
+	}
+
+	
+	return *this;
+}
+ ostream & operator<<( ostream & out , const Vector & v)
+  {
+  
+	  for(int i=0;i<v.num_element;i++){
+	  
+		  out<<v.numbers[i]<<"  ";
+	  }
+	  out<<endl;
+
+  return out;
+  }
+  istream & operator>>( istream & in ,  Vector & v){
+ 
+ int x,y;
+ cout<<"enter the number of element :";
+ in>>x;
+
+	 for(int i=0;i<x;i++)
+	 {
+	 in>>y;
+	 v.addElement(y);
+	 }
+ 
+	 v.num_element=x;
+ return in;
+ }
+ int Vector:: operator[](const int  i){
+ 
+ return numbers[i];
+ 
+ 
+ }
+Vector Vector :: operator+(const int number){
+
+	 for(int i=0;i<num_element;i++)
+
+		 numbers[i]+=number;
+
+
+	 
+	 return (*this);
+
+
+ }
+Vector Vector :: operator-(const int number){
+
+	 for(int i=0;i<num_element;i++)
+
+		 numbers[i]-=number;
+
+
+	 
+	 return (*this);
+
+
+ }
+ 
+ 
+
+
